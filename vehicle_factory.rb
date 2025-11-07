@@ -1,74 +1,114 @@
-class VehicleFactory
-  attr_reader :name, :colour, :fuel_type, :top_speed
-  attr_accessor :wheels, :max_passenger
-  def initialize(name, colour, fuel_type, top_speed, wheels, max_passenger)
-    @name = name
-    @colour = colour
-    @fuel_type = fuel_type
-    @top_speed = top_speed
-    @wheels = wheels
-    @max_passenger = max_passenger
+require "./vehicle.rb"
+
+class CarFactory
+  DEFAULTS = {
+    sedan: {
+      name: "Camry",
+      colour: "White",
+      fuel_type: "Diesel",
+      top_speed: 180,
+      wheels: 4,
+      max_passenger: 5,
+      brand: "Toyota",
+      make: "Sedan"
+    },
+    suv: {
+      name: "Explorer",
+      colour: "Black",
+      fuel_type: "Petrol",
+      top_speed: 200,
+      wheels: 4,
+      max_passenger: 7,
+      brand: "Ford",
+      make: "SUV"
+    },
+    ev: {
+      name: "Model S",
+      colour: "Red",
+      fuel_type: "Electric",
+      top_speed: 250,
+      wheels: 4,
+      max_passenger: 5,
+      brand: "Tesla",
+      make: "Sedan"
+    }
+  }
+
+  def self.create_sedan
+    create_car(DEFAULTS[:sedan])
   end
 
-  def details
-    "This is a brand new #{@name} in #{@colour} colour, runs on #{@fuel_type}, has #{@wheels} wheels and a maximum capacity of #{@max_passenger} passengers with a top speed of #{@top_speed} kmph"
+  def self.create_suv
+    create_car(DEFAULTS[:suv])
+  end
+
+  def self.create_ev
+    create_car(DEFAULTS[:ev])
+  end
+
+  private
+
+  def self.create_car(config)
+    Car.new(
+      config[:name],
+      config[:colour],
+      config[:fuel_type],
+      config[:top_speed],
+      config[:wheels],
+      config[:max_passenger],
+      config[:brand],
+      config[:make]
+    )
   end
 end
 
-class Bike<VehicleFactory
-  def initialize(*args, brand)
-    super(*args)
-    @brand = brand
+class BusFactory
+  DEFAULTS = {
+    ksrtc: {
+      name: "Airavat",
+      colour: "White",
+      fuel_type: "Petrol",
+      top_speed: 120,
+      wheels: 8,
+      max_passenger: 120,
+      axles: 4,
+      corporation: "Karnataka State Road Transport Corporation"
+    },
+    wbstc: {
+      name: "Royal Cruiser",
+      colour: "Blue",
+      fuel_type: "Petrol",
+      top_speed: 150,
+      wheels: 8,
+      max_passenger: 200,
+      axles: 6,
+      corporation: "West Bengal State Transport Corporation"
+    }
+  }
+
+  def self.create_ksrtc_bus
+    create_bus(DEFAULTS[:ksrtc])
   end
 
-  def details
-    "This is a brand new #{@name} by #{@brand} in #{@colour} colour, runs on #{@fuel_type}, has #{@wheels} wheels and a maximum capacity of #{@max_passenger} passengers with a top speed of #{@top_speed} kmph"
+  def self.create_wbstc_bus
+    create_bus(DEFAULTS[:wbstc])
+  end
+
+  private
+
+  def self.create_bus(config)
+    Bus.new(
+      config[:name],
+      config[:colour],
+      config[:fuel_type],
+      config[:top_speed],
+      config[:wheels],
+      config[:max_passenger],
+      config[:axles],
+      config[:corporation]
+    )
   end
 end
 
-class Scooty<VehicleFactory
-  def initialize(*args, brand)
-    super(*args)
-    @brand = brand
-  end
-
-  def details
-    "This is a brand new #{@name} by #{@brand} in #{@colour} colour, runs on #{@fuel_type}, has #{@wheels} wheels and a maximum capacity of #{@max_passenger} passengers with a top speed of #{@top_speed} kmph"
-  end
-end
-
-class Auto<VehicleFactory
-  def initialize(*args)
-    super(*args)
-  end
-end
-
-class Toto<VehicleFactory
-  def initialize(*args)
-    super(*args)
-  end
-end
-
-class Car<VehicleFactory
-  def initialize(*args, brand, make)
-    super(*args)
-    @brand = brand
-    @make = make
-  end
-
-  def details
-    "This is #{@name} by #{@brand}, a brand new #{@make} in #{@colour} colour, runs on #{@fuel_type}, has #{@wheels} wheels and a maximum capacity of #{@max_passenger} passengers with a top speed of #{@top_speed} kmph"
-  end
-end
-
-class Bus<VehicleFactory
-  def initialize(*args, axles, corporation)
-    super(*args)
-    @axles = axles
-    @corporation = corporation
-  end
-
-  def details
-    "This is a brand new #{@name} by #{@corporation} in #{@colour} colour, runs on #{@fuel_type}, has #{@wheels} wheels, #{@axles} and a maximum capacity of #{@max_passenger} passengers with a top speed of #{@top_speed} kmph"
-  end
-end
+[:create_sedan, :create_suv, :create_ev].each{ |method| p CarFactory.send(method).details }
+[:create_ksrtc_bus, :create_wbstc_bus].each{ |method| p BusFactory.send(method).details }
